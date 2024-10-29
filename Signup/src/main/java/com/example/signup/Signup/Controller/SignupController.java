@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.signup.Signup.DTO.OtpRequest;
 import com.example.signup.Signup.DTO.OtpVerificationRequest;
 import com.example.signup.Signup.Entity.User;
+import com.example.signup.Signup.Security.JwtTokenProvider;
 import com.example.signup.Signup.Service.OtpService;
 import com.example.signup.Signup.Service.UserService;
 
@@ -33,8 +34,8 @@ public class SignupController {
     @Autowired
     private UserService userService;
     
-    //@Autowired
-    //private JwtTokenProvider jwtTokenProvider; 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider; 
 
     @PostMapping("/send-otp")
     @CrossOrigin(origins = "http://localhost:3000")
@@ -62,16 +63,16 @@ public class SignupController {
         }
         
         System.out.println("Decrypted:"+SignupController.decrypt(user.getPassword()));
-       
+        user.setPassword(SignupController.decrypt(user.getPassword()));
 
         userService.saveUser(user);
-        /*
+        
         String jwtToken = jwtTokenProvider.generateToken(user.getEmail());
 
         // Prepare response with token
         Map<String, Object> response = new HashMap<>();
         response.put("message", "User Registered Successfully");
-        response.put("token", jwtToken);*/ 
+        response.put("token", jwtToken);
         return ResponseEntity.ok("success");
     }
     

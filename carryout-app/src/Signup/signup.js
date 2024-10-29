@@ -147,7 +147,7 @@ function Signup() {
         password: encryptPassword(formData.password),
       })
       .then((response) => {
-        login();
+        login(response.data.token);
         console.log(response);
         setShowOtpModal(false);
         setIsLoading(false); // Stop loading once user is registered

@@ -27,12 +27,13 @@ function Login() {
       const response = await axios.post('http://localhost:8081/login', formData);
       
       // Simulate a minimum 1.5 second wait or wait until the backend responds
-      const delay = new Promise(resolve => setTimeout(resolve, 0));
+      const delay = new Promise(resolve => setTimeout(resolve, 1500));
       await Promise.all([response, delay]);
 
       if (response.status === 200) {
+        const token = response.data.token; // Assuming JWT is returned in `response.data.token`
         console.log('Login successful', response.data);
-        login(); // Mark the user as logged in
+        login(token); // Mark the user as logged in
         navigate('/restaurants'); // Redirect to the restaurants page
       }
     } catch (error) {

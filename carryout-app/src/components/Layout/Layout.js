@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaCog, FaHistory, FaUser, FaSignOutAlt } from 'react-icons/fa';
-
+import { useAuth } from '../Authentication/AuthContext';
 const Layout = ({ children }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
   const navigate = useNavigate();
-
+  const {logout} = useAuth();
   const toggleProfile = () => {
     setIsProfileOpen(!isProfileOpen);
   };
@@ -29,6 +29,7 @@ const Layout = ({ children }) => {
   const handleLogout = () => {
     // Clear any authentication data (token, etc.)
     localStorage.removeItem('authToken'); // Remove token from localStorage
+    logout();
     navigate('/'); // Redirect to sign-in page
   };
 
