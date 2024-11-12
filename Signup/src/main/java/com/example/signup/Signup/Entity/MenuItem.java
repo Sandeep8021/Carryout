@@ -1,17 +1,30 @@
 package com.example.signup.Signup.Entity;
 
+import java.util.UUID;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class MenuItem {
 	
-    @Id
-    private String id;
+	
+	private String id;
     private String item_name;
     private double item_price;
     private String item_description;
     private String item_category;
+    private int quantity;
+    
+    public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	public MenuItem() {
+        this.id = UUID.randomUUID().toString(); // Generate a unique ID
+    }
 	public String getId() {
 		return id;
 	}

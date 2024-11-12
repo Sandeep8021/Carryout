@@ -68,12 +68,12 @@ public class SignupController {
         userService.saveUser(user);
         
         String jwtToken = jwtTokenProvider.generateToken(user.getEmail());
-
+        System.out.println("jwtToken"+jwtToken);
         // Prepare response with token
         Map<String, Object> response = new HashMap<>();
         response.put("message", "User Registered Successfully");
         response.put("token", jwtToken);
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(response);
     }
     
     private static final String SECRET_KEY = "youwillneverknow";

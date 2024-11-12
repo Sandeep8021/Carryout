@@ -32,8 +32,9 @@ const RestaurantList = () => {
     setError(null);
 
     const token = localStorage.getItem('authToken');
+    console.log(token)
     axios
-      .get(`http://localhost:8081/api/restaurants/list`, {
+      .get(`http://localhost:8080/api/restaurants/list`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

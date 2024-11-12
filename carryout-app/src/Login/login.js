@@ -33,7 +33,7 @@ function Login() {
       if (response.status === 200) {
         const token = response.data.token; // Assuming JWT is returned in `response.data.token`
         console.log('Login successful', response.data);
-        login(token); // Mark the user as logged in
+        login(token, formData.email); // Mark the user as logged in
         navigate('/restaurants'); // Redirect to the restaurants page
       }
     } catch (error) {

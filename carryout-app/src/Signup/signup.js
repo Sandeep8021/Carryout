@@ -62,7 +62,7 @@ function Signup() {
 
   const sendOtp = () => {
     axios
-      .post('http://localhost:8081/signup/send-otp', {
+      .post('http://localhost:8080/signup/send-otp', {
         email: formData.email,
       })
       .then(() => {
@@ -110,13 +110,14 @@ function Signup() {
   const verifyOtp = () => {
     setIsVerifying(true); // Start loading spinner for OTP verification
     axios
-      .post('http://localhost:8081/signup/verify-otp', {
+      .post('http://localhost:8080/signup/verify-otp', {
         email: formData.email,
         emailOtp: otpData.emailOtp,
       })
       .then((response) => {
         if (response.data.verified) {
           saveUser();
+
         } else {
           setOtpError('Invalid OTP! Please try again.');
         }
@@ -140,14 +141,15 @@ function Signup() {
 
   const saveUser = () => {
     axios
-      .post('http://localhost:8081/signup/register', {
+      .post('http://localhost:8080/signup/register', {
         username: formData.username,
         email: formData.email,
         phone: formData.phone,
         password: encryptPassword(formData.password),
       })
       .then((response) => {
-        login(response.data.token);
+        console.log(response.data)
+        login(response.data.token, formData.email);
         console.log(response);
         setShowOtpModal(false);
         setIsLoading(false); // Stop loading once user is registered

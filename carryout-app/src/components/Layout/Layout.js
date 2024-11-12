@@ -2,32 +2,64 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaCog, FaHistory, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { useAuth } from '../Authentication/AuthContext';
+
 const Layout = ({ children }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
+  const [location, setLocation] = useState(null); // State to store location data
+  const [address, setAddress] = useState(''); // State to store address
   const navigate = useNavigate();
-  const {logout} = useAuth();
+  const { logout } = useAuth();
+  const apiKey = 'ed44fce202e9404ea14c350a4d5cc4ae'; // Replace with your OpenCage API key
+
   const toggleProfile = () => {
     setIsProfileOpen(!isProfileOpen);
   };
 
   const toggleLocation = () => {
     setIsLocationEnabled(!isLocationEnabled);
+
     if (!isLocationEnabled) {
       // Request live location
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          const { latitude, longitude } = position.coords;
           console.log('Location fetched:', position);
+
+          // Set location state with latitude and longitude
+          setLocation({ latitude, longitude });
+
+          // Fetch address using reverse geocoding
+          fetchAddress(latitude, longitude);
         },
         (error) => {
           console.error('Error fetching location:', error);
         }
       );
+    } else {
+      setLocation(null); // Clear location when disabled
+      setAddress(''); // Clear address when disabled
+    }
+  };
+
+  const fetchAddress = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
+      );
+      const data = await response.json();
+
+      if (data.results && data.results.length > 0) {
+        setAddress(data.results[0].formatted); // Get the formatted address
+      } else {
+        console.error('No address found');
+      }
+    } catch (error) {
+      console.error('Error fetching address:', error);
     }
   };
 
   const handleLogout = () => {
-    // Clear any authentication data (token, etc.)
     localStorage.removeItem('authToken'); // Remove token from localStorage
     logout();
     navigate('/'); // Redirect to sign-in page
@@ -51,6 +83,18 @@ const Layout = ({ children }) => {
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
           </label>
+          {/* Display location if available */}
+          {location && (
+            <span className="ml-2 text-sm bg-green-500 text-white px-2 py-1 rounded">
+              Lat: {location.latitude.toFixed(4)}, Lng: {location.longitude.toFixed(4)}
+            </span>
+          )}
+          {/* Display address if available */}
+          {address && (
+            <span className="ml-2 text-sm bg-blue-500 text-white px-2 py-1 rounded">
+              {address}
+            </span>
+          )}
 
           {/* Profile Button */}
           <div className="relative">
@@ -60,12 +104,13 @@ const Layout = ({ children }) => {
             {isProfileOpen && (
               <div
                 className={`absolute right-0 mt-2 w-48 bg-white text-black border rounded shadow-lg transition duration-300 ease-in-out transform ${
-                  isProfileOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                  isProfileOpen ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-95'
                 }`}
               >
                 <Link to="/profile" className="flex items-center px-4 py-2 hover:bg-gray-100 transition">
                   <FaUser className="mr-2" /> Profile
                 </Link>
+                
                 <Link to="/settings" className="flex items-center px-4 py-2 hover:bg-gray-100 transition">
                   <FaCog className="mr-2" /> Settings
                 </Link>
