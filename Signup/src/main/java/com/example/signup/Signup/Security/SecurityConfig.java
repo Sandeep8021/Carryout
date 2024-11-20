@@ -52,7 +52,7 @@ public class SecurityConfig {
             .and()
             .csrf().disable()  // Disable CSRF for simplicity
             .authorizeRequests()
-            .requestMatchers("/signup/**", "/login").permitAll()  // Allow access to signup and login
+            .requestMatchers("/signup/**","api/orders/*", "/login").permitAll()  // Allow access to signup and login
             .anyRequest().authenticated()  // Authenticate all other requests
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);  // Disable session creation

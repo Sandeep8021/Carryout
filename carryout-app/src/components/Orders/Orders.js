@@ -38,7 +38,7 @@ const Orders = () => {
       ) : (
         <ul>
           {orders.map((order) => (
-            <li key={order.id} className="mb-4 p-4 bg-white shadow rounded">
+            <li key={order.id} className="m-2 p-2  black shadow rounded">
               <h3 className="font-bold">Order ID: {order.id}</h3>
               <p>Date: {new Date(order.timestamp).toLocaleDateString()}</p>
               <p>Total Amount: ${order.totalAmount.toFixed(2)}</p>
